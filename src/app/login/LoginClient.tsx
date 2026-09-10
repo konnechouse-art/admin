@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 
-/** Bleu exact du logo Konnect House (icon.jpeg) */
+/** Bleu exact du logo Konnect House */
 const LOGO_BLUE = "#021347";
 
 export default function LoginClient() {
@@ -83,11 +83,11 @@ export default function LoginClient() {
       >
         <div className="mx-auto flex justify-center">
           <Image
-            src="/logo.jpeg"
+            src="/logo.png"
             alt="Konnect House"
-            width={96}
-            height={96}
-            className="h-20 w-20 rounded-2xl object-contain"
+            width={240}
+            height={86}
+            className="h-14 w-auto object-contain"
             priority
           />
         </div>
