@@ -80,19 +80,50 @@ export default function ProvidersPage() {
                 className="border-b border-[var(--kh-border)] last:border-0"
               >
                 <td className="px-4 py-4">
-                  <p className="font-bold text-[var(--kh-primary)]">
-                    {row.fullName}
-                  </p>
-                  <p className="text-xs text-[var(--kh-text-muted)]">
-                    {row.email}
-                  </p>
-                  <p className="text-xs text-[var(--kh-text-muted)]">
-                    {row.phone || "Pas de téléphone"} · inscrit{" "}
-                    {dateLabel(row.createdAt)}
-                  </p>
+                  <div className="flex gap-3 items-start">
+                    {row.providerProfile?.avatarUrl ? (
+                      <img
+                        src={row.providerProfile.avatarUrl}
+                        alt=""
+                        className="h-10 w-10 rounded-full object-cover border border-[var(--kh-border)]"
+                      />
+                    ) : null}
+                    <div>
+                      <p className="font-bold text-[var(--kh-primary)]">
+                        {row.fullName}
+                      </p>
+                      <p className="text-xs text-[var(--kh-text-muted)]">
+                        {row.email}
+                      </p>
+                      <p className="text-xs text-[var(--kh-text-muted)]">
+                        {row.phone || "Pas de téléphone"} · inscrit{" "}
+                        {dateLabel(row.createdAt)}
+                      </p>
+                      {row.providerProfile?.profession ||
+                      row.providerProfile?.homeCommune ? (
+                        <p className="mt-1 text-xs text-[var(--kh-text-muted)]">
+                          {[
+                            row.providerProfile?.profession,
+                            row.providerProfile?.homeCommune,
+                            row.providerProfile?.homeCity,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
                 </td>
                 <td className="px-4 py-4">
-                  <p>{row._count?.properties ?? 0} bien(s)</p>
+                  <p>{row._count?.properties ?? 0} bien(s) en ligne</p>
+                  {row.providerProfile?.propertyCount != null ? (
+                    <p className="text-xs text-[var(--kh-text-muted)]">
+                      Déclare {row.providerProfile.propertyCount} bien(s)
+                      {row.providerProfile.propertyTypes?.length
+                        ? ` · ${row.providerProfile.propertyTypes.join(", ")}`
+                        : ""}
+                    </p>
+                  ) : null}
                   <p className="text-xs text-[var(--kh-text-muted)]">
                     {row._count?.bookings ?? 0} réservation(s)
                   </p>

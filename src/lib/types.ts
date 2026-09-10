@@ -7,6 +7,14 @@ export type AdminUser = {
   status: "PENDING" | "ACTIVE" | "SUSPENDED" | "BANNED";
   createdAt: string;
   providerProfile?: {
+    avatarUrl?: string | null;
+    dateOfBirth?: string | null;
+    profession?: string | null;
+    homeAddress?: string | null;
+    homeCommune?: string | null;
+    homeCity?: string | null;
+    propertyCount?: number | null;
+    propertyTypes?: string[];
     mobileMoneyNumber?: string | null;
     bankAccount?: string | null;
     acceptedPaymentMethods?: string[];
