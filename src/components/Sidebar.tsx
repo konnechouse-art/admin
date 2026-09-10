@@ -71,15 +71,7 @@ function IconUsers({ className }: IconProps) {
 function IconBookings({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect
-        x="3.5"
-        y="5"
-        width="17"
-        height="15"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
+      <rect x="3.5" y="5" width="17" height="15" rx="2" stroke="currentColor" strokeWidth="1.8" />
       <path d="M8 3.5v3M16 3.5v3M3.5 10h17" stroke="currentColor" strokeWidth="1.8" />
     </svg>
   );
@@ -88,22 +80,14 @@ function IconBookings({ className }: IconProps) {
 function IconPayments({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect
-        x="2.5"
-        y="6"
-        width="19"
-        height="12"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
+      <rect x="2.5" y="6" width="19" height="12" rx="2" stroke="currentColor" strokeWidth="1.8" />
       <path d="M2.5 10h19" stroke="currentColor" strokeWidth="1.8" />
       <path d="M7 15h3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
 
-const NAV = [
+export const ADMIN_NAV = [
   { href: "/overview", label: "Tableau de bord", Icon: IconOverview },
   { href: "/properties", label: "Biens", Icon: IconProperties },
   { href: "/providers", label: "Fournisseurs", Icon: IconProviders },
@@ -114,27 +98,40 @@ const NAV = [
 
 export function Sidebar({
   collapsed,
-  onToggle,
+  mobileOpen,
+  onToggleCollapse,
+  onCloseMobile,
 }: {
   collapsed: boolean;
-  onToggle: () => void;
+  mobileOpen: boolean;
+  onToggleCollapse: () => void;
+  onCloseMobile: () => void;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
+  const rail = collapsed;
 
   return (
-    <aside
-      className={`flex shrink-0 flex-col bg-[#011A66] text-white transition-[width] duration-200 ${
-        collapsed ? "w-[76px]" : "w-64"
-      }`}
-    >
-      <div
-        className={`border-b border-white/10 ${collapsed ? "px-2 py-4" : "px-4 py-5"}`}
+    <>
+      {/* Overlay mobile */}
+      <button
+        type="button"
+        aria-label="Fermer le menu"
+        onClick={onCloseMobile}
+        className={`fixed inset-0 z-40 bg-black/50 transition lg:hidden ${
+          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-[min(100%,18rem)] flex-col bg-[#011A66] text-white shadow-xl transition-transform duration-200 lg:static lg:z-auto lg:h-auto lg:min-h-screen lg:shrink-0 lg:shadow-none ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        } ${rail ? "lg:w-[76px]" : "lg:w-64"}`}
       >
-        <div className={`flex items-start ${collapsed ? "justify-center" : "justify-between gap-2"}`}>
-          {!collapsed ? (
-            <div className="min-w-0">
+        <div className={`border-b border-white/10 ${rail ? "lg:px-2 lg:py-4" : ""} px-4 py-4`}>
+          <div className={`flex items-start gap-2 ${rail ? "lg:justify-center" : "justify-between"}`}>
+            <div className={`min-w-0 ${rail ? "lg:hidden" : ""}`}>
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#66CAE4]">
                 Back-office
               </p>
@@ -145,83 +142,70 @@ export function Sidebar({
                 {user?.fullName || "Administrateur"}
               </p>
             </div>
-          ) : null}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onToggleCollapse}
+                title={rail ? "Étendre le menu" : "Réduire le menu"}
+                aria-label={rail ? "Étendre le menu" : "Réduire le menu"}
+                className="hidden rounded-lg border border-white/20 p-2 text-white/90 hover:bg-white/10 lg:inline-flex"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  {rail ? (
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  ) : (
+                    <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  )}
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={onCloseMobile}
+                aria-label="Fermer"
+                className="rounded-lg border border-white/20 p-2 text-white/90 hover:bg-white/10 lg:hidden"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <nav className={`flex-1 space-y-1 overflow-y-auto py-4 ${rail ? "lg:px-2" : "lg:px-3"} px-3`}>
+          {ADMIN_NAV.map(({ href, label, Icon }) => {
+            const active = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                title={label}
+                data-active={active ? "true" : "false"}
+                onClick={onCloseMobile}
+                className={`kh-nav-link flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition lg:py-2.5 ${
+                  rail ? "lg:justify-center lg:px-2" : ""
+                } ${active ? "kh-nav-link-active bg-white" : "hover:bg-white/10"}`}
+              >
+                <Icon className="h-5 w-5 shrink-0" />
+                <span className={`truncate ${rail ? "lg:hidden" : ""}`}>{label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className={`border-t border-white/10 ${rail ? "lg:p-2" : "lg:p-4"} p-4`}>
           <button
             type="button"
-            onClick={onToggle}
-            title={collapsed ? "Étendre le menu" : "Réduire le menu"}
-            aria-label={collapsed ? "Étendre le menu" : "Réduire le menu"}
-            className="rounded-lg border border-white/20 p-2 text-white/90 hover:bg-white/10"
+            title="Déconnexion"
+            onClick={() => {
+              logout();
+              router.replace("/login");
+            }}
+            className={`flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 px-3 py-3 text-sm font-semibold text-white hover:bg-white/10 lg:py-2.5 ${
+              rail ? "lg:px-2" : ""
+            }`}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-              {collapsed ? (
-                <path
-                  d="M9 6l6 6-6 6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              ) : (
-                <path
-                  d="M15 6l-6 6 6 6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <nav className={`flex-1 space-y-1 py-4 ${collapsed ? "px-2" : "px-3"}`}>
-        {NAV.map(({ href, label, Icon }) => {
-          const active = pathname === href;
-          const itemColor = active ? "#011A66" : "rgba(255,255,255,0.9)";
-          return (
-            <Link
-              key={href}
-              href={href}
-              title={label}
-              className={`flex items-center gap-3 rounded-xl text-sm font-semibold transition ${
-                collapsed ? "justify-center px-2 py-3" : "px-3 py-2.5"
-              } ${active ? "bg-white" : "hover:bg-white/10"}`}
-              style={{ color: itemColor }}
-            >
-              <span className="inline-flex shrink-0" style={{ color: itemColor }}>
-                <Icon className="h-5 w-5" />
-              </span>
-              {!collapsed ? (
-                <span className="truncate" style={{ color: itemColor }}>
-                  {label}
-                </span>
-              ) : null}
-            </Link>
-          );
-        })}
-      </nav>
-
-      <div className={`border-t border-white/10 ${collapsed ? "p-2" : "p-4"}`}>
-        <button
-          type="button"
-          title="Déconnexion"
-          onClick={() => {
-            logout();
-            router.replace("/login");
-          }}
-          className={`w-full rounded-xl border border-white/20 text-sm font-semibold text-white/90 hover:bg-white/10 ${
-            collapsed ? "px-2 py-3" : "px-3 py-2.5"
-          }`}
-        >
-          {collapsed ? (
-            <svg
-              className="mx-auto h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden
-            >
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
                 d="M10 7V5a1 1 0 0 1 1-1h8v16h-8a1 1 0 0 1-1-1v-2M14 12H4m0 0 3-3m-3 3 3 3"
                 stroke="currentColor"
@@ -230,11 +214,10 @@ export function Sidebar({
                 strokeLinejoin="round"
               />
             </svg>
-          ) : (
-            "Déconnexion"
-          )}
-        </button>
-      </div>
-    </aside>
+            <span className={rail ? "lg:hidden" : ""}>Déconnexion</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }

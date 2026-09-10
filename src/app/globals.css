@@ -39,9 +39,22 @@ a {
   text-decoration: none;
 }
 
-/* Liens de nav actifs : la couleur inline / utilitaire doit gagner */
-aside a {
-  color: unset;
+/* Nav sidebar : couleurs explicites (évite a { color: inherit } qui blanchit le texte actif) */
+aside a.kh-nav-link {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+aside a.kh-nav-link-active,
+aside a.kh-nav-link[data-active="true"] {
+  color: #011a66 !important;
+}
+aside a.kh-nav-link-active svg,
+aside a.kh-nav-link[data-active="true"] svg {
+  color: #011a66 !important;
+}
+
+/* Tables admin : scroll horizontal sur mobile */
+main .overflow-hidden.rounded-2xl {
+  overflow-x: auto;
 }
 
 button,
