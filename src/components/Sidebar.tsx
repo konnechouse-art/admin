@@ -179,6 +179,7 @@ export function Sidebar({
       <nav className={`flex-1 space-y-1 py-4 ${collapsed ? "px-2" : "px-3"}`}>
         {NAV.map(({ href, label, Icon }) => {
           const active = pathname === href;
+          const itemColor = active ? "#011A66" : "rgba(255,255,255,0.9)";
           return (
             <Link
               key={href}
@@ -186,18 +187,17 @@ export function Sidebar({
               title={label}
               className={`flex items-center gap-3 rounded-xl text-sm font-semibold transition ${
                 collapsed ? "justify-center px-2 py-3" : "px-3 py-2.5"
-              } ${
-                active
-                  ? "bg-white text-[#011A66]"
-                  : "text-white/85 hover:bg-white/10 hover:text-white"
-              }`}
+              } ${active ? "bg-white" : "hover:bg-white/10"}`}
+              style={{ color: itemColor }}
             >
-              <Icon
-                className={`h-5 w-5 shrink-0 ${
-                  active ? "text-[#011A66]" : "text-current"
-                }`}
-              />
-              {!collapsed ? <span className="truncate">{label}</span> : null}
+              <span className="inline-flex shrink-0" style={{ color: itemColor }}>
+                <Icon className="h-5 w-5" />
+              </span>
+              {!collapsed ? (
+                <span className="truncate" style={{ color: itemColor }}>
+                  {label}
+                </span>
+              ) : null}
             </Link>
           );
         })}
