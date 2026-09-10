@@ -81,8 +81,8 @@ export default function PropertiesPage() {
               >
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     {row.photos?.[0] ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- remote property URLs
                       <img
                         src={row.photos[0]}
                         alt=""

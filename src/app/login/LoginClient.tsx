@@ -5,6 +5,9 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 
+/** Bleu exact du logo Konnect House (icon.jpeg) */
+const LOGO_BLUE = "#021347";
+
 export default function LoginClient() {
   const { login, token, user, loading } = useAuth();
   const router = useRouter();
@@ -36,16 +39,15 @@ export default function LoginClient() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10">
-      {/* Fond réseau — branding Konnect House */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 50% 0%, #3478AB 0%, #011A66 48%, #020b2a 100%)",
+            "radial-gradient(circle at 50% 18%, #2a2a2a 0%, #0d0d0d 42%, #000000 100%)",
         }}
       />
       <svg
-        className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.22]"
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.18]"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMid slice"
         aria-hidden
@@ -57,15 +59,15 @@ export default function LoginClient() {
             height="120"
             patternUnits="userSpaceOnUse"
           >
-            <circle cx="8" cy="18" r="1.6" fill="#66CAE4" />
+            <circle cx="8" cy="18" r="1.6" fill="#fff" />
             <circle cx="58" cy="42" r="1.4" fill="#fff" />
-            <circle cx="98" cy="12" r="1.5" fill="#66CAE4" />
+            <circle cx="98" cy="12" r="1.5" fill="#fff" />
             <circle cx="34" cy="88" r="1.3" fill="#fff" />
             <circle cx="110" cy="76" r="1.5" fill="#fff" />
-            <circle cx="72" cy="108" r="1.2" fill="#66CAE4" />
+            <circle cx="72" cy="108" r="1.2" fill="#fff" />
             <path
               d="M8 18 L58 42 L98 12 M58 42 L34 88 M58 42 L110 76 M34 88 L72 108 L110 76"
-              stroke="#66CAE4"
+              stroke="#fff"
               strokeWidth="0.7"
               fill="none"
               opacity="0.7"
@@ -75,15 +77,17 @@ export default function LoginClient() {
         <rect width="100%" height="100%" fill="url(#kh-net)" />
       </svg>
 
-      <div className="relative w-full max-w-[420px] rounded-[1.75rem] bg-[#12151c] px-7 py-8 text-white shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:px-9 sm:py-10">
-        {/* Logo dans capsule blanche — comme image 2 */}
-        <div className="mx-auto flex h-12 w-[min(100%,220px)] items-center justify-center rounded-full bg-white px-5 shadow-sm">
+      <div
+        className="relative w-full max-w-[420px] rounded-[1.75rem] px-7 py-8 text-white shadow-[0_30px_80px_rgba(0,0,0,0.55)] sm:px-9 sm:py-10"
+        style={{ backgroundColor: LOGO_BLUE }}
+      >
+        <div className="mx-auto flex justify-center">
           <Image
-            src="/logo.png"
+            src="/logo.jpeg"
             alt="Konnect House"
-            width={160}
-            height={40}
-            className="h-8 w-auto object-contain"
+            width={96}
+            height={96}
+            className="h-20 w-20 rounded-2xl object-contain"
             priority
           />
         </div>
@@ -119,7 +123,7 @@ export default function LoginClient() {
                 placeholder="admin@konnecthouse.cd"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#1c212b] py-3.5 pl-11 pr-4 text-sm text-white placeholder:text-white/35 outline-none focus:border-[#66CAE4]/50 focus:ring-2 focus:ring-[#66CAE4]/20"
+                className="w-full rounded-xl border border-white/15 bg-black/25 py-3.5 pl-11 pr-4 text-sm text-white placeholder:text-white/35 outline-none focus:border-white/40 focus:ring-2 focus:ring-white/15"
               />
             </div>
           </label>
@@ -148,13 +152,13 @@ export default function LoginClient() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#1c212b] py-3.5 pl-11 pr-4 text-sm text-white placeholder:text-white/35 outline-none focus:border-[#66CAE4]/50 focus:ring-2 focus:ring-[#66CAE4]/20"
+                className="w-full rounded-xl border border-white/15 bg-black/25 py-3.5 pl-11 pr-4 text-sm text-white placeholder:text-white/35 outline-none focus:border-white/40 focus:ring-2 focus:ring-white/15"
               />
             </div>
           </label>
 
           {error ? (
-            <p className="text-sm font-medium text-red-400" role="alert">
+            <p className="text-sm font-medium text-red-300" role="alert">
               {error}
             </p>
           ) : null}
@@ -162,7 +166,8 @@ export default function LoginClient() {
           <button
             type="submit"
             disabled={busy}
-            className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-[#66CAE4] px-4 py-3.5 text-base font-extrabold text-[#011A66] transition hover:bg-[#8ad7eb] disabled:opacity-60"
+            className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3.5 text-base font-extrabold transition hover:bg-white/90 disabled:opacity-60"
+            style={{ color: LOGO_BLUE }}
           >
             {busy ? "Connexion…" : "Login →"}
           </button>
