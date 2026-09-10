@@ -15,6 +15,10 @@ export type AdminUser = {
     homeCity?: string | null;
     propertyCount?: number | null;
     propertyTypes?: string[];
+    idDocumentType?: string | null;
+    idDocumentUrl?: string | null;
+    kycStatus?: "PENDING" | "SUBMITTED" | "APPROVED" | "REJECTED" | null;
+    kycRejectionReason?: string | null;
     mobileMoneyNumber?: string | null;
     bankAccount?: string | null;
     acceptedPaymentMethods?: string[];
