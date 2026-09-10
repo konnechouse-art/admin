@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --kh-blue: #011a66;
+  --kh-blue-2: #3478ab;
+  --kh-sky: #66cae4;
+  --kh-bg: #f3f6fc;
+  --kh-bg-soft: #ffffff;
+  --kh-border: rgba(1, 26, 102, 0.12);
+  --kh-text: #172033;
+  --kh-text-muted: rgba(23, 32, 51, 0.68);
+  --kh-primary: #011a66;
+  --kh-secondary: #3478ab;
+}
+
+@theme inline {
+  --font-sans: var(--font-montserrat);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--kh-bg);
+  color: var(--kh-text);
+  font-family: var(--font-montserrat), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
