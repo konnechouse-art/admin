@@ -28,7 +28,7 @@ export default function BookingsPage() {
           Réservations
         </h2>
         <p className="mt-2 text-[var(--kh-text-muted)]">
-          Historique et suivi des séjours (CDC 4.4.4).
+          Historique et suivi des séjours.
         </p>
       </header>
       {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}

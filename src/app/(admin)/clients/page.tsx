@@ -57,7 +57,7 @@ export default function ClientsPage() {
           Utilisateurs
         </h2>
         <p className="mt-2 text-[var(--kh-text-muted)]">
-          Consulter et modérer les comptes clients WhatsApp (CDC 4.4.3).
+          Consulter et modérer les comptes clients WhatsApp.
         </p>
       </header>
       {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}

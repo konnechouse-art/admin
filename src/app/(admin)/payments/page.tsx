@@ -28,7 +28,7 @@ export default function PaymentsPage() {
           Paiements
         </h2>
         <p className="mt-2 text-[var(--kh-text-muted)]">
-          Transactions, commissions et parts fournisseurs (CDC 4.4.5).
+          Transactions, commissions et parts fournisseurs.
         </p>
       </header>
       {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}

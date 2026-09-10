@@ -28,7 +28,7 @@ export default function OverviewPage() {
           Tableau de bord
         </h2>
         <p className="mt-2 text-[var(--kh-text-muted)]">
-          Vue centralisée de l’offre, des réservations et des revenus (CDC 4.4.6).
+          Vue centralisée de l’offre, des réservations et des revenus.
         </p>
       </header>
       {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}

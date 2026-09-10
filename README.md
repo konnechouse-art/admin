@@ -1,6 +1,6 @@
 # Konnect House — Admin
 
-Back-office administrateur (Next.js) selon le CDC §4.4.
+Back-office administrateur (Next.js).
 
 Dossier local : `admin` · API : projet `nest`.
 

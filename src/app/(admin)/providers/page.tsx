@@ -58,7 +58,7 @@ export default function ProvidersPage() {
           Fournisseurs
         </h2>
         <p className="mt-2 text-[var(--kh-text-muted)]">
-          Valider, suspendre ou bloquer les comptes propriétaires (CDC 4.4.2).
+          Valider, suspendre ou bloquer les comptes propriétaires.
         </p>
       </header>
       {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}

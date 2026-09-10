@@ -58,7 +58,7 @@ export default function PropertiesPage() {
           Gestion des biens
         </h2>
         <p className="mt-2 text-[var(--kh-text-muted)]">
-          Valider, publier, masquer ou archiver les annonces (CDC 4.4.1).
+          Valider, publier, masquer ou archiver les annonces.
         </p>
       </header>
       {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}
