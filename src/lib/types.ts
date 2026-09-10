@@ -40,13 +40,29 @@ export type DashboardStats = {
 export type PropertyRow = {
   id: string;
   name: string;
+  category?: string;
+  description?: string;
+  rooms?: number;
+  capacity?: number;
   commune: string;
+  neighborhood?: string | null;
   address?: string;
+  gpsLat?: number | null;
+  gpsLng?: number | null;
   pricePerNight: number | string;
   status: "PENDING_REVIEW" | "PUBLISHED" | "SUSPENDED" | "ARCHIVED";
+  amenities?: string[];
+  accessTags?: string[];
+  conditions?: string | null;
   photos: string[];
   createdAt: string;
-  owner?: { id: string; fullName: string; email: string | null };
+  owner?: {
+    id: string;
+    fullName: string;
+    email: string | null;
+    phone?: string | null;
+    whatsappNumber?: string | null;
+  };
 };
 
 export type BookingRow = {

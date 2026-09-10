@@ -44,3 +44,38 @@ export const PAYMENT_STATUS: Record<string, string> = {
   FAILED: "Échoué",
   REFUNDED: "Remboursé",
 };
+
+export const AMENITY_LABELS: Record<string, string> = {
+  wifi: "Wi-Fi",
+  parking: "Parking",
+  climatisation: "Climatisation",
+  eau_chaude: "Eau chaude",
+  securite: "Sécurité",
+  cuisine: "Cuisine",
+  salle_de_bain_privee: "Salle de bain privée",
+  tv: "TV",
+};
+
+export const ACCESS_PREF_LABELS: Record<string, string> = {
+  pres_macadam: "Près du macadam / grande voie",
+  acces_facile: "Accès facile (voiture)",
+  quartier_calme: "Quartier calme",
+  proche_commerces: "Proche commerces / marché",
+  proche_transports: "Proche transports",
+};
+
+/** Normalise un numéro pour wa.me (chiffres seuls, avec indicatif si possible). */
+export function whatsappHref(
+  phone?: string | null,
+  message?: string,
+): string | null {
+  if (!phone) return null;
+  let digits = phone.replace(/\D/g, "");
+  if (!digits) return null;
+  if (digits.startsWith("0") && digits.length >= 9) {
+    digits = `243${digits.slice(1)}`;
+  }
+  const base = `https://wa.me/${digits}`;
+  if (!message) return base;
+  return `${base}?text=${encodeURIComponent(message)}`;
+}

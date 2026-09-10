@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import PropertyReviewModal from "@/components/PropertyReviewModal";
 import { StatusBadge } from "@/components/StatusBadge";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import { dateLabel, money, PROPERTY_STATUS } from "@/lib/format";
+import { dateLabel, money, PROPERTY_STATUS, whatsappHref } from "@/lib/format";
 import type { PropertyRow } from "@/lib/types";
 
 const ACTIONS: { status: PropertyRow["status"]; label: string }[] = [
@@ -19,11 +20,17 @@ export default function PropertiesPage() {
   const [rows, setRows] = useState<PropertyRow[]>([]);
   const [error, setError] = useState("");
   const [busyId, setBusyId] = useState("");
+  const [selected, setSelected] = useState<PropertyRow | null>(null);
 
   const load = useCallback(() => {
     if (!token) return;
     api<PropertyRow[]>("/admin/properties", { token })
-      .then(setRows)
+      .then((data) => {
+        setRows(data);
+        setSelected((cur) =>
+          cur ? data.find((r) => r.id === cur.id) ?? null : null,
+        );
+      })
       .catch((err) =>
         setError(err instanceof Error ? err.message : "Erreur de chargement"),
       );
@@ -58,7 +65,8 @@ export default function PropertiesPage() {
           Gestion des biens
         </h2>
         <p className="mt-2 text-[var(--kh-text-muted)]">
-          Valider, publier, masquer ou archiver les annonces.
+          Cliquez sur un bien pour revoir ses infos et photos, puis valider,
+          publier, masquer ou archiver.
         </p>
       </header>
       {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}
@@ -74,72 +82,90 @@ export default function PropertiesPage() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.id}
-                className="border-b border-[var(--kh-border)] last:border-0"
-              >
-                <td className="px-4 py-4">
-                  <div className="flex items-center gap-3">
-                    {row.photos?.[0] ? (
-                      // eslint-disable-next-line @next/next/no-img-element -- remote property URLs
-                      <img
-                        src={row.photos[0]}
-                        alt=""
-                        className="h-14 w-20 rounded-lg object-cover bg-[var(--kh-bg)]"
-                      />
-                    ) : (
-                      <div className="h-14 w-20 rounded-lg bg-[var(--kh-bg)]" />
-                    )}
-                    <div>
-                      <p className="font-bold text-[var(--kh-primary)]">
-                        {row.name}
-                      </p>
-                      <p className="text-xs text-[var(--kh-text-muted)]">
-                        {row.commune}
-                        {row.address ? ` · ${row.address}` : ""} ·{" "}
-                        {dateLabel(row.createdAt)}
-                      </p>
-                      <p className="text-xs text-[var(--kh-text-muted)]">
-                        {row.photos?.length ?? 0} photo(s)
-                      </p>
+            {rows.map((row) => {
+              const wa = whatsappHref(
+                row.owner?.whatsappNumber || row.owner?.phone,
+                `Bonjour ${row.owner?.fullName || ""}, concernant votre bien « ${row.name} » sur Konnect House.`,
+              );
+              return (
+                <tr
+                  key={row.id}
+                  className="cursor-pointer border-b border-[var(--kh-border)] last:border-0 hover:bg-[var(--kh-bg)]/60"
+                  onClick={() => setSelected(row)}
+                >
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-3">
+                      {row.photos?.[0] ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- remote property URLs
+                        <img
+                          src={row.photos[0]}
+                          alt=""
+                          className="h-14 w-20 rounded-lg object-cover bg-[var(--kh-bg)]"
+                        />
+                      ) : (
+                        <div className="h-14 w-20 rounded-lg bg-[var(--kh-bg)]" />
+                      )}
+                      <div>
+                        <p className="font-bold text-[var(--kh-primary)]">
+                          {row.name}
+                        </p>
+                        <p className="text-xs text-[var(--kh-text-muted)]">
+                          {row.commune}
+                          {row.address ? ` · ${row.address}` : ""} ·{" "}
+                          {dateLabel(row.createdAt)}
+                        </p>
+                        <p className="text-xs text-[var(--kh-text-muted)]">
+                          {row.photos?.length ?? 0} photo(s) · Voir détail
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-4 py-4">
-                  <p className="font-medium">{row.owner?.fullName || "—"}</p>
-                  <p className="text-xs text-[var(--kh-text-muted)]">
-                    {row.owner?.email}
-                  </p>
-                </td>
-                <td className="px-4 py-4 font-semibold">
-                  {money(row.pricePerNight)}
-                </td>
-                <td className="px-4 py-4">
-                  <StatusBadge
-                    status={row.status}
-                    label={PROPERTY_STATUS[row.status] || row.status}
-                  />
-                </td>
-                <td className="px-4 py-4">
-                  <div className="flex flex-wrap gap-2">
-                    {ACTIONS.filter((a) => a.status !== row.status).map(
-                      (action) => (
-                        <button
-                          key={action.status}
-                          type="button"
-                          disabled={busyId === row.id}
-                          onClick={() => setStatus(row.id, action.status)}
-                          className="rounded-lg border border-[var(--kh-border)] px-2.5 py-1.5 text-xs font-semibold hover:bg-[var(--kh-bg)] disabled:opacity-50"
-                        >
-                          {action.label}
-                        </button>
-                      ),
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className="px-4 py-4">
+                    <p className="font-medium">{row.owner?.fullName || "—"}</p>
+                    <p className="text-xs text-[var(--kh-text-muted)]">
+                      {row.owner?.email}
+                    </p>
+                    {wa ? (
+                      <a
+                        href={wa}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-[#128C7E] hover:underline"
+                      >
+                        WhatsApp
+                      </a>
+                    ) : null}
+                  </td>
+                  <td className="px-4 py-4 font-semibold">
+                    {money(row.pricePerNight)}
+                  </td>
+                  <td className="px-4 py-4">
+                    <StatusBadge
+                      status={row.status}
+                      label={PROPERTY_STATUS[row.status] || row.status}
+                    />
+                  </td>
+                  <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex flex-wrap gap-2">
+                      {ACTIONS.filter((a) => a.status !== row.status).map(
+                        (action) => (
+                          <button
+                            key={action.status}
+                            type="button"
+                            disabled={busyId === row.id}
+                            onClick={() => setStatus(row.id, action.status)}
+                            className="rounded-lg border border-[var(--kh-border)] px-2.5 py-1.5 text-xs font-semibold hover:bg-[var(--kh-bg)] disabled:opacity-50"
+                          >
+                            {action.label}
+                          </button>
+                        ),
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
             {!rows.length ? (
               <tr>
                 <td
@@ -153,6 +179,15 @@ export default function PropertiesPage() {
           </tbody>
         </table>
       </div>
+
+      {selected ? (
+        <PropertyReviewModal
+          property={selected}
+          busy={busyId === selected.id}
+          onClose={() => setSelected(null)}
+          onStatus={(status) => setStatus(selected.id, status)}
+        />
+      ) : null}
     </div>
   );
 }
